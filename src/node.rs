@@ -548,9 +548,11 @@ mod wasm {
             From::<String>::from(self.inner.to_string().into())
         }
 
+        // source should not be used in wasm because start_byte is character offset instead of byte offset
+        // this is caused by different string encoding in JS and Rust
         #[inline]
         pub fn utf8_text<'a>(&self, _source: &'a [u8]) -> Result<Cow<'a, str>, std::str::Utf8Error> {
-            std::str::from_utf8(&_source[(self.start_byte() as usize) .. (self.end_byte() as usize)]).map(Into::into)
+            Ok(self.inner.text().as_string().unwrap().into())
         }
 
         #[inline]

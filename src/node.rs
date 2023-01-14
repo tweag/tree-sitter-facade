@@ -405,6 +405,7 @@ mod wasm {
             unimplemented!()
         }
 
+        // FIXME: this returns end character offset instead of byte offset
         #[inline]
         pub fn end_byte(&self) -> u32 {
             self.inner.end_index()
@@ -529,6 +530,7 @@ mod wasm {
             web_tree_sitter::Range::new(&start_position, &end_position, start_index, end_index).into()
         }
 
+        // FIXME: this returns start character offset instead of byte offset
         #[inline]
         pub fn start_byte(&self) -> u32 {
             self.inner.start_index()

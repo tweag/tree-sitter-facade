@@ -7,9 +7,10 @@ mod parser;
 mod point;
 mod query;
 mod query_capture;
-//mod query_cursor;
+mod query_cursor;
 mod query_match;
 //mod query_matches;
+mod query_predicate;
 mod range;
 mod tree;
 mod tree_cursor;
@@ -23,9 +24,10 @@ pub use parser::*;
 pub use point::*;
 pub use query::*;
 pub use query_capture::*;
-//pub use query_cursor::*;
+pub use query_cursor::*;
 pub use query_match::*;
 //pub use query_matches::*;
+pub use query_predicate::*;
 pub use range::*;
 pub use tree::*;
 pub use tree_cursor::*;
@@ -39,7 +41,7 @@ pub struct TreeSitter;
 struct WasmError {}
 
 impl Display for WasmError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
 }

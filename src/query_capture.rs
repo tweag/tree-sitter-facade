@@ -1,7 +1,7 @@
 #[cfg(not(target_arch = "wasm32"))]
 mod native {
-    use crate::{node::Node, Query};
-    use std::{borrow::Cow, convert::TryFrom};
+    use crate::node::Node;
+    use std::borrow::Cow;
 
     #[derive(Clone)]
     pub struct QueryCapture<'a> {
@@ -15,14 +15,20 @@ mod native {
         }
 
         #[inline]
-        pub fn utf8_name<'s>(&self, capture_names: &'s Vec<String>) -> Cow<'s, str> {
+        pub fn utf8_name<'s>(&self, capture_names: &'s [String]) -> Cow<'s, str> {
             let index: usize = self.inner.index as usize;
             Cow::Borrowed(capture_names[index].as_str())
         }
 
         #[inline]
-        pub fn utf8_text<'s>(&self, capture_names: &'s Vec<String>) -> Option<Cow<'s, str>> {
+        pub fn utf8_text<'s>(&self, _capture_names: &'s [String]) -> Option<Cow<'s, str>> {
             None
+        }
+    }
+
+    impl<'a> std::fmt::Debug for QueryCapture<'a> {
+        fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+            std::fmt::Debug::fmt(&self.inner, fmt)
         }
     }
 
@@ -68,13 +74,19 @@ mod wasm {
         }
 
         #[inline]
-        pub fn utf8_name<'s>(&self, capture_names: &'s Vec<String>) -> Cow<str> {
+        pub fn utf8_name<'s>(&self, _capture_names: &'s [String]) -> Cow<str> {
             Cow::Owned(self.inner.name().as_string().unwrap())
         }
 
         #[inline]
-        pub fn utf8_text<'s>(&self, capture_names: &'s Vec<String>) -> Option<Cow<str>> {
+        pub fn utf8_text<'s>(&self, _capture_names: &'s [String]) -> Option<Cow<str>> {
             self.inner.text().map(|t| Cow::Owned(t.as_string().unwrap()))
+        }
+    }
+
+    impl<'a> std::fmt::Debug for QueryCapture<'a> {
+        fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+            std::fmt::Debug::fmt(&self.inner, fmt)
         }
     }
 

@@ -1,7 +1,7 @@
 #[cfg(not(target_arch = "wasm32"))]
 mod native {
-    use crate::{node::Node, query::Query, query_capture::QueryCapture};
-    use std::{borrow::Cow, convert::TryFrom};
+    use crate::query_capture::QueryCapture;
+    use std::convert::TryFrom;
 
     pub struct QueryMatch<'tree> {
         pub(crate) inner: tree_sitter::QueryMatch<'tree, 'tree>,
@@ -9,8 +9,8 @@ mod native {
 
     impl<'tree> QueryMatch<'tree> {
         #[inline]
-        pub fn pattern_index(&self) -> usize {
-            self.inner.pattern_index
+        pub fn pattern_index(&self) -> u32 {
+            u32::try_from(self.inner.pattern_index).unwrap()
         }
 
         #[inline]
@@ -38,8 +38,7 @@ pub use native::*;
 
 #[cfg(target_arch = "wasm32")]
 mod wasm {
-    use crate::{node::Node, query::Query, query_capture::QueryCapture};
-    use std::borrow::Cow;
+    use crate::query_capture::QueryCapture;
     use wasm_bindgen::JsCast;
 
     #[derive(Clone)]
@@ -50,15 +49,15 @@ mod wasm {
 
     impl<'tree> QueryMatch<'tree> {
         #[inline]
-        pub fn pattern_index(&self) -> usize {
+        pub fn pattern_index(&self) -> u32 {
             self.inner.pattern()
         }
 
         #[inline]
         pub fn captures(&self) -> impl ExactSizeIterator<Item = QueryCapture<'tree>> + 'tree {
             self.inner.captures().into_vec().into_iter().map(|value| {
-                let s = format!("Query match capture: {:?}", value);
-                //web_sys::console::log_1(&s.into());
+                let _s = format!("Query match capture: {:?}", value);
+                //web_sys::console::log_1(&_s.into());
                 value.unchecked_into::<web_tree_sitter::QueryCapture>().into()
             })
         }

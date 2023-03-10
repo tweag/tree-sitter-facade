@@ -46,11 +46,14 @@ mod native {
         }
     }
 
-    impl<'a> std::panic::RefUnwindSafe for QueryCapture<'a> {}
+    impl<'a> std::panic::RefUnwindSafe for QueryCapture<'a> {
+    }
 
-    impl<'a> Unpin for QueryCapture<'a> {}
+    impl<'a> Unpin for QueryCapture<'a> {
+    }
 
-    impl<'a> std::panic::UnwindSafe for QueryCapture<'a> {}
+    impl<'a> std::panic::UnwindSafe for QueryCapture<'a> {
+    }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -93,11 +96,14 @@ mod wasm {
         }
     }
 
-    impl<'a> std::panic::RefUnwindSafe for QueryCapture<'a> {}
+    impl<'a> std::panic::RefUnwindSafe for QueryCapture<'a> {
+    }
 
-    impl<'a> Unpin for QueryCapture<'a> {}
+    impl<'a> Unpin for QueryCapture<'a> {
+    }
 
-    impl<'a> std::panic::UnwindSafe for QueryCapture<'a> {}
+    impl<'a> std::panic::UnwindSafe for QueryCapture<'a> {
+    }
 }
 
 #[cfg(target_arch = "wasm32")]

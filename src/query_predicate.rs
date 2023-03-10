@@ -41,11 +41,14 @@ mod native {
         }
     }
 
-    impl<'query> std::panic::RefUnwindSafe for QueryPredicate<'query> {}
+    impl<'query> std::panic::RefUnwindSafe for QueryPredicate<'query> {
+    }
 
-    impl<'query> Unpin for QueryPredicate<'query> {}
+    impl<'query> Unpin for QueryPredicate<'query> {
+    }
 
-    impl<'query> std::panic::UnwindSafe for QueryPredicate<'query> {}
+    impl<'query> std::panic::UnwindSafe for QueryPredicate<'query> {
+    }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -98,11 +101,14 @@ mod wasm {
         }
     }
 
-    impl std::panic::RefUnwindSafe for QueryPredicate {}
+    impl std::panic::RefUnwindSafe for QueryPredicate {
+    }
 
-    impl Unpin for QueryPredicate {}
+    impl Unpin for QueryPredicate {
+    }
 
-    impl std::panic::UnwindSafe for QueryPredicate {}
+    impl std::panic::UnwindSafe for QueryPredicate {
+    }
 }
 
 #[cfg(target_arch = "wasm32")]

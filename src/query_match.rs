@@ -26,11 +26,14 @@ mod native {
         }
     }
 
-    impl<'tree> std::panic::RefUnwindSafe for QueryMatch<'tree> {}
+    impl<'tree> std::panic::RefUnwindSafe for QueryMatch<'tree> {
+    }
 
-    impl<'tree> Unpin for QueryMatch<'tree> {}
+    impl<'tree> Unpin for QueryMatch<'tree> {
+    }
 
-    impl<'tree> std::panic::UnwindSafe for QueryMatch<'tree> {}
+    impl<'tree> std::panic::UnwindSafe for QueryMatch<'tree> {
+    }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -56,8 +59,6 @@ mod wasm {
         #[inline]
         pub fn captures(&self) -> impl ExactSizeIterator<Item = QueryCapture<'tree>> + 'tree {
             self.inner.captures().into_vec().into_iter().map(|value| {
-                let _s = format!("Query match capture: {:?}", value);
-                //web_sys::console::log_1(&_s.into());
                 value.unchecked_into::<web_tree_sitter::QueryCapture>().into()
             })
         }
@@ -71,11 +72,14 @@ mod wasm {
         }
     }
 
-    impl<'tree> std::panic::RefUnwindSafe for QueryMatch<'tree> {}
+    impl<'tree> std::panic::RefUnwindSafe for QueryMatch<'tree> {
+    }
 
-    impl<'tree> Unpin for QueryMatch<'tree> {}
+    impl<'tree> Unpin for QueryMatch<'tree> {
+    }
 
-    impl<'tree> std::panic::UnwindSafe for QueryMatch<'tree> {}
+    impl<'tree> std::panic::UnwindSafe for QueryMatch<'tree> {
+    }
 }
 
 #[cfg(target_arch = "wasm32")]

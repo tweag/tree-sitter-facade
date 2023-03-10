@@ -14,7 +14,7 @@ mod native {
             let range = self.inner.byte_range();
             let start = u32::try_from(range.start).unwrap();
             let end = u32::try_from(range.end).unwrap();
-            start..end
+            start .. end
         }
 
         #[inline]
@@ -269,11 +269,14 @@ mod native {
         }
     }
 
-    impl<'a> std::panic::RefUnwindSafe for Node<'a> {}
+    impl<'a> std::panic::RefUnwindSafe for Node<'a> {
+    }
 
-    impl<'a> Unpin for Node<'a> {}
+    impl<'a> Unpin for Node<'a> {
+    }
 
-    impl<'a> std::panic::UnwindSafe for Node<'a> {}
+    impl<'a> std::panic::UnwindSafe for Node<'a> {
+    }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -298,7 +301,7 @@ mod wasm {
         pub fn byte_range(&self) -> std::ops::Range<u32> {
             let start = self.inner.start_index();
             let end = self.inner.end_index();
-            start..end
+            start .. end
         }
 
         #[inline]
@@ -626,11 +629,14 @@ mod wasm {
         }
     }
 
-    impl<'a> std::panic::RefUnwindSafe for Node<'a> {}
+    impl<'a> std::panic::RefUnwindSafe for Node<'a> {
+    }
 
-    impl<'a> Unpin for Node<'a> {}
+    impl<'a> Unpin for Node<'a> {
+    }
 
-    impl<'a> std::panic::UnwindSafe for Node<'a> {}
+    impl<'a> std::panic::UnwindSafe for Node<'a> {
+    }
 }
 
 #[cfg(target_arch = "wasm32")]

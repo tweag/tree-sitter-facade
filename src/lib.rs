@@ -9,7 +9,6 @@ mod query;
 mod query_capture;
 mod query_cursor;
 mod query_match;
-//mod query_matches;
 mod query_predicate;
 mod range;
 mod tree;
@@ -26,42 +25,21 @@ pub use query::*;
 pub use query_capture::*;
 pub use query_cursor::*;
 pub use query_match::*;
-//pub use query_matches::*;
 pub use query_predicate::*;
 pub use range::*;
 pub use tree::*;
 pub use tree_cursor::*;
 
-use std::error::Error;
-use std::fmt::Display;
-
 pub struct TreeSitter;
-
-#[derive(Debug)]
-struct WasmError {}
-
-impl Display for WasmError {
-    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        todo!()
-    }
-}
-
-impl Error for WasmError {}
 
 impl TreeSitter {
     #[cfg(not(target_arch = "wasm32"))]
-    pub async fn init() -> Result<(), Box<dyn Error>> {
+    pub async fn init() -> Result<(), Box<dyn std::error::Error>> {
         Ok(())
     }
 
     #[cfg(target_arch = "wasm32")]
-    pub async fn init() -> Result<(), Box<dyn Error>> {
-        match web_tree_sitter::TreeSitter::init().await {
-            Err(wasm_bindgen::JsError { .. }) => {
-                // TODO: Transfer error message
-                Err(Box::new(WasmError {}))
-            },
-            _ => Ok(()),
-        }
+    pub async fn init() -> Result<(), wasm_bindgen::JsError> {
+        web_tree_sitter::TreeSitter::init().await
     }
 }

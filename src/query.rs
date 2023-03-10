@@ -7,14 +7,12 @@ mod native {
 
     pub struct Query {
         pub inner: tree_sitter::Query,
-        // pub cursor: tree_sitter::QueryCursor,
     }
 
     impl Query {
         #[inline]
         pub fn new(language: &Language, source: &str) -> Result<Self, QueryError> {
             let inner = tree_sitter::Query::new(language.inner, source)?;
-            // let cursor = tree_sitter::QueryCursor::new();
             Ok(Self { inner })
         }
 
@@ -50,20 +48,24 @@ mod native {
     impl From<tree_sitter::Query> for Query {
         #[inline]
         fn from(inner: tree_sitter::Query) -> Self {
-            // let cursor = tree_sitter::QueryCursor::new();
             Self { inner }
         }
     }
 
-    impl std::panic::RefUnwindSafe for Query {}
+    impl std::panic::RefUnwindSafe for Query {
+    }
 
-    unsafe impl Send for Query {}
+    unsafe impl Send for Query {
+    }
 
-    unsafe impl Sync for Query {}
+    unsafe impl Sync for Query {
+    }
 
-    impl Unpin for Query {}
+    impl Unpin for Query {
+    }
 
-    impl std::panic::UnwindSafe for Query {}
+    impl std::panic::UnwindSafe for Query {
+    }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -100,9 +102,6 @@ mod wasm {
                 .into_vec()
                 .into_iter()
                 .map(|value| {
-                    let _s = format!("Query match: {:?}", value);
-                    //web_sys::console::log_1(&_s.into());
-
                     value.unchecked_into::<web_tree_sitter::QueryMatch>().into()
                 })
         }
@@ -120,9 +119,6 @@ mod wasm {
                 .into_vec()
                 .into_iter()
                 .map(|value| {
-                    let _s = format!("Query predicate: {:?}", value);
-                    //web_sys::console::log_1(&_s.into());
-
                     value.unchecked_into::<web_tree_sitter::QueryPredicate>().into()
                 })
                 .collect();
@@ -151,15 +147,20 @@ mod wasm {
         }
     }
 
-    impl std::panic::RefUnwindSafe for Query {}
+    impl std::panic::RefUnwindSafe for Query {
+    }
 
-    unsafe impl Send for Query {}
+    unsafe impl Send for Query {
+    }
 
-    unsafe impl Sync for Query {}
+    unsafe impl Sync for Query {
+    }
 
-    impl Unpin for Query {}
+    impl Unpin for Query {
+    }
 
-    impl std::panic::UnwindSafe for Query {}
+    impl std::panic::UnwindSafe for Query {
+    }
 }
 
 #[cfg(target_arch = "wasm32")]

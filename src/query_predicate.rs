@@ -8,7 +8,7 @@ mod native {
 
     impl<'query> QueryPredicate<'query> {
         #[inline]
-        pub fn utf8_operator<'s>(&'s self) -> Cow<'s, str> {
+        pub fn operator<'s>(&'s self) -> Cow<'s, str> {
             Cow::Borrowed(&self.inner.operator)
         }
 
@@ -65,7 +65,7 @@ mod wasm {
 
     impl QueryPredicate {
         #[inline]
-        pub fn utf8_operator<'s>(&self) -> Cow<str> {
+        pub fn operator<'s>(&self) -> Cow<str> {
             Cow::Owned(self.inner.operator().as_string().unwrap())
         }
 
@@ -77,8 +77,6 @@ mod wasm {
                 .iter()
                 .cloned()
                 .map(|value| {
-                    let _s = format!("Predicate arg: {:?}", value);
-                    //web_sys::console::log_1(&_s.into());
                     let arg = value.unchecked_into::<web_tree_sitter::QueryPredicateArg>();
                     arg.value().as_string().unwrap()
                 })

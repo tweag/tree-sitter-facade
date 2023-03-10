@@ -15,14 +15,9 @@ mod native {
         }
 
         #[inline]
-        pub fn utf8_name<'s>(&self, capture_names: &'s [String]) -> Cow<'s, str> {
+        pub fn name<'s>(&self, capture_names: &'s [String]) -> Cow<'s, str> {
             let index: usize = self.inner.index as usize;
             Cow::Borrowed(capture_names[index].as_str())
-        }
-
-        #[inline]
-        pub fn utf8_text<'s>(&self, _capture_names: &'s [String]) -> Option<Cow<'s, str>> {
-            None
         }
     }
 
@@ -77,7 +72,7 @@ mod wasm {
         }
 
         #[inline]
-        pub fn utf8_name<'s>(&self, _capture_names: &'s [String]) -> Cow<str> {
+        pub fn name<'s>(&self, _capture_names: &'s [String]) -> Cow<str> {
             Cow::Owned(self.inner.name().as_string().unwrap())
         }
     }

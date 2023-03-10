@@ -6,6 +6,10 @@ mod node;
 mod parser;
 mod point;
 mod query;
+mod query_capture;
+mod query_cursor;
+mod query_match;
+mod query_predicate;
 mod range;
 mod tree;
 mod tree_cursor;
@@ -18,22 +22,24 @@ pub use node::*;
 pub use parser::*;
 pub use point::*;
 pub use query::*;
+pub use query_capture::*;
+pub use query_cursor::*;
+pub use query_match::*;
+pub use query_predicate::*;
 pub use range::*;
 pub use tree::*;
 pub use tree_cursor::*;
-
-use wasm_bindgen::prelude::*;
 
 pub struct TreeSitter;
 
 impl TreeSitter {
     #[cfg(not(target_arch = "wasm32"))]
-    pub async fn init() -> Result<(), JsError> {
+    pub async fn init() -> Result<(), Box<dyn std::error::Error>> {
         Ok(())
     }
 
     #[cfg(target_arch = "wasm32")]
-    pub async fn init() -> Result<(), JsError> {
+    pub async fn init() -> Result<(), wasm_bindgen::JsError> {
         web_tree_sitter::TreeSitter::init().await
     }
 }

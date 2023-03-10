@@ -1,6 +1,9 @@
 #[cfg(not(target_arch = "wasm32"))]
 mod native {
-    use crate::{error::QueryError, language::Language};
+    use crate::{
+        error::QueryError, language::Language, node::Node, query_cursor::QueryCursor, query_match::QueryMatch,
+        query_predicate::QueryPredicate,
+    };
 
     pub struct Query {
         pub inner: tree_sitter::Query,
@@ -11,6 +14,28 @@ mod native {
         pub fn new(language: &Language, source: &str) -> Result<Self, QueryError> {
             let inner = tree_sitter::Query::new(language.inner, source)?;
             Ok(Self { inner })
+        }
+
+        #[inline]
+        pub fn matches<'a, 'tree: 'a>(
+            &'a self,
+            node: &Node<'tree>,
+            source: &'a [u8],
+            cursor: &'a mut QueryCursor,
+        ) -> impl Iterator<Item = QueryMatch<'a>> + 'a {
+            cursor.inner.matches(&self.inner, node.inner, source).map(Into::into)
+        }
+
+        #[inline]
+        pub fn capture_names(&self) -> Vec<String> {
+            let names: Vec<_> = self.inner.capture_names().iter().cloned().collect();
+            names
+        }
+
+        #[inline]
+        pub fn general_predicates(&self, index: u32) -> Vec<QueryPredicate> {
+            let index = index as usize;
+            self.inner.general_predicates(index).iter().map(Into::into).collect()
         }
     }
 
@@ -48,7 +73,11 @@ pub use native::*;
 
 #[cfg(target_arch = "wasm32")]
 mod wasm {
-    use crate::{error::QueryError, language::Language};
+    use crate::{
+        error::QueryError, language::Language, node::Node, query_cursor::QueryCursor, query_match::QueryMatch,
+        query_predicate::QueryPredicate,
+    };
+    use wasm_bindgen::JsCast;
 
     pub struct Query {
         pub(crate) inner: web_tree_sitter::Query,
@@ -59,6 +88,44 @@ mod wasm {
         pub fn new(language: &Language, source: &str) -> Result<Self, QueryError> {
             let inner = language.inner.query(&source.into())?;
             Ok(Self { inner })
+        }
+
+        #[inline]
+        pub fn matches<'a, 'tree: 'a>(
+            &'a self,
+            node: &Node<'tree>,
+            _source: &'a [u8],
+            _cursor: &'a mut QueryCursor,
+        ) -> impl ExactSizeIterator<Item = QueryMatch<'tree>> + 'tree {
+            self.inner
+                .matches(&node.inner, None, None)
+                .into_vec()
+                .into_iter()
+                .map(|value| {
+                    value.unchecked_into::<web_tree_sitter::QueryMatch>().into()
+                })
+        }
+
+        #[inline]
+        pub fn capture_names(&self) -> Vec<String> {
+            // The Wasm code does not use this when looking up 
+            // QueryCapture::name, the way the native code needs to.
+            vec![]
+        }
+
+        #[inline]
+        pub fn general_predicates(&self, index: u32) -> Vec<QueryPredicate> {
+            let predicates: Vec<_> = self
+                .inner
+                .predicates_for_pattern(index)
+                .into_vec()
+                .into_iter()
+                .map(|value| {
+                    value.unchecked_into::<web_tree_sitter::QueryPredicate>().into()
+                })
+                .collect();
+
+            predicates
         }
     }
 

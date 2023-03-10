@@ -77,11 +77,6 @@ mod wasm {
         pub fn utf8_name<'s>(&self, _capture_names: &'s [String]) -> Cow<str> {
             Cow::Owned(self.inner.name().as_string().unwrap())
         }
-
-        #[inline]
-        pub fn utf8_text<'s>(&self, _capture_names: &'s [String]) -> Option<Cow<str>> {
-            self.inner.text().map(|t| Cow::Owned(t.as_string().unwrap()))
-        }
     }
 
     impl<'a> std::fmt::Debug for QueryCapture<'a> {

@@ -108,6 +108,8 @@ mod wasm {
 
         #[inline]
         pub fn capture_names(&self) -> Vec<String> {
+            // The Wasm code does not use this when looking up 
+            // QueryCapture::name, the way the native code needs to.
             vec![]
         }
 

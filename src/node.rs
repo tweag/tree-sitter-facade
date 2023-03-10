@@ -285,7 +285,7 @@ pub use native::*;
 #[cfg(target_arch = "wasm32")]
 mod wasm {
     use crate::{input_edit::InputEdit, point::Point, range::Range, tree_cursor::TreeCursor};
-    use std::{borrow::Cow, convert::TryFrom};
+    use std::{borrow::Cow};
     use wasm_bindgen::{prelude::*, JsCast};
     use web_tree_sitter::SyntaxNode;
 
@@ -323,7 +323,7 @@ mod wasm {
 
         #[inline]
         pub fn child_count(&self) -> u32 {
-            u32::try_from(self.inner.child_count()).unwrap()
+            self.inner.child_count()
         }
 
         #[inline]
@@ -462,7 +462,7 @@ mod wasm {
         }
 
         #[inline]
-        pub fn named_child<'a>(&'a self, i: u32) -> Option<Self> {
+        pub fn named_child(&self, i: u32) -> Option<Self> {
             self.inner.named_child(i).map(Into::into)
         }
 

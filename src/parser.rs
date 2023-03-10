@@ -287,7 +287,7 @@ mod wasm {
         // }
 
         #[inline]
-        pub fn set_included_ranges<'a>(&mut self, ranges: &'a [Range]) -> Result<(), IncludedRangesError> {
+        pub fn set_included_ranges(&mut self, ranges: &[Range]) -> Result<(), IncludedRangesError> {
             // FIXME: check `ranges[i].end_byte <= ranges[i + 1].start_byte` or throw
             let ranges = ranges.iter().map(|range| &range.inner).collect::<js_sys::Array>();
             let options = web_tree_sitter::ParseOptions::new(Some(&ranges));
@@ -306,7 +306,7 @@ mod wasm {
             if let Some(logger) = logger {
                 let clo = Closure::wrap(logger);
                 let fun = clo.as_ref().unchecked_ref::<Function>();
-                self.inner.set_logger(Some(&fun));
+                self.inner.set_logger(Some(fun));
                 clo.forget();
             } else {
                 self.inner.set_logger(None);

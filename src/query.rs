@@ -28,7 +28,7 @@ mod native {
 
         #[inline]
         pub fn capture_names(&self) -> Vec<String> {
-            let names: Vec<_> = self.inner.capture_names().iter().cloned().collect();
+            let names: Vec<_> = self.inner.capture_names().to_vec();
             names
         }
 

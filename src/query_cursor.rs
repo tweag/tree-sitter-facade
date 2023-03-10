@@ -50,6 +50,12 @@ mod wasm {
         }
     }
 
+    impl Default for QueryCursor {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
     impl std::panic::RefUnwindSafe for QueryCursor {
     }
 

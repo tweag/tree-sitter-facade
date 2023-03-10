@@ -21,7 +21,7 @@ mod native {
         #[inline]
         pub fn matches<'a, 'tree: 'a>(
             &'a self,
-            node: Node<'tree>,
+            node: &Node<'tree>,
             source: &'a [u8],
             cursor: &'a mut QueryCursor,
         ) -> impl Iterator<Item = QueryMatch<'a>> + 'a {
@@ -91,7 +91,7 @@ mod wasm {
         #[inline]
         pub fn matches<'a, 'tree: 'a>(
             &'a self,
-            node: Node<'tree>,
+            node: &Node<'tree>,
             _source: &'a [u8],
             _cursor: &'a mut QueryCursor,
         ) -> impl ExactSizeIterator<Item = QueryMatch<'tree>> + 'tree {

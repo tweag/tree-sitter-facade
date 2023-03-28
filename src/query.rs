@@ -6,7 +6,7 @@ mod native {
     };
 
     pub struct Query {
-        pub inner: tree_sitter::Query,
+        pub(crate) inner: tree_sitter::Query,
     }
 
     impl Query {
@@ -36,6 +36,21 @@ mod native {
         pub fn general_predicates(&self, index: u32) -> Vec<QueryPredicate> {
             let index = index as usize;
             self.inner.general_predicates(index).iter().map(Into::into).collect()
+        }
+
+        #[inline]
+        pub fn pattern_count(&self) -> usize {
+            self.inner.pattern_count()
+        }
+
+        #[inline]
+        pub fn disable_pattern(&mut self, index: usize) -> () {
+            self.inner.disable_pattern(index)
+        }
+
+        #[inline]
+        pub fn start_byte_for_pattern(&self, pattern_index: usize) -> usize {
+            self.inner.start_byte_for_pattern(pattern_index)
         }
     }
 

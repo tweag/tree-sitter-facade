@@ -2,7 +2,7 @@
 mod native {
     use crate::{
         error::QueryError, language::Language, node::Node, query_cursor::QueryCursor, query_match::QueryMatch,
-        query_predicate::QueryPredicate,
+        query_predicate::QueryPredicate, query_property::QueryProperty,
     };
 
     pub struct Query {
@@ -30,6 +30,12 @@ mod native {
         pub fn capture_names(&self) -> Vec<String> {
             let names: Vec<_> = self.inner.capture_names().to_vec();
             names
+        }
+
+        #[inline]
+        pub fn property_settings(&self, index: u32) -> Vec<QueryProperty> {
+            let index = index as usize;
+            self.inner.property_settings(index).iter().map(Into::into).collect()
         }
 
         #[inline]
@@ -67,20 +73,15 @@ mod native {
         }
     }
 
-    impl std::panic::RefUnwindSafe for Query {
-    }
+    impl std::panic::RefUnwindSafe for Query {}
 
-    unsafe impl Send for Query {
-    }
+    unsafe impl Send for Query {}
 
-    unsafe impl Sync for Query {
-    }
+    unsafe impl Sync for Query {}
 
-    impl Unpin for Query {
-    }
+    impl Unpin for Query {}
 
-    impl std::panic::UnwindSafe for Query {
-    }
+    impl std::panic::UnwindSafe for Query {}
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -116,14 +117,12 @@ mod wasm {
                 .matches(&node.inner, None, None)
                 .into_vec()
                 .into_iter()
-                .map(|value| {
-                    value.unchecked_into::<web_tree_sitter::QueryMatch>().into()
-                })
+                .map(|value| value.unchecked_into::<web_tree_sitter::QueryMatch>().into())
         }
 
         #[inline]
         pub fn capture_names(&self) -> Vec<String> {
-            // The Wasm code does not use this when looking up 
+            // The Wasm code does not use this when looking up
             // QueryCapture::name, the way the native code needs to.
             vec![]
         }
@@ -135,9 +134,7 @@ mod wasm {
                 .predicates_for_pattern(index)
                 .into_vec()
                 .into_iter()
-                .map(|value| {
-                    value.unchecked_into::<web_tree_sitter::QueryPredicate>().into()
-                })
+                .map(|value| value.unchecked_into::<web_tree_sitter::QueryPredicate>().into())
                 .collect();
 
             predicates
@@ -164,20 +161,15 @@ mod wasm {
         }
     }
 
-    impl std::panic::RefUnwindSafe for Query {
-    }
+    impl std::panic::RefUnwindSafe for Query {}
 
-    unsafe impl Send for Query {
-    }
+    unsafe impl Send for Query {}
 
-    unsafe impl Sync for Query {
-    }
+    unsafe impl Sync for Query {}
 
-    impl Unpin for Query {
-    }
+    impl Unpin for Query {}
 
-    impl std::panic::UnwindSafe for Query {
-    }
+    impl std::panic::UnwindSafe for Query {}
 }
 
 #[cfg(target_arch = "wasm32")]
